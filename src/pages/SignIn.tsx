@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
-  Lock,
   ArrowLeft,
   CheckCircle,
   Loader2,
@@ -10,8 +9,11 @@ import {
   EyeOff,
 } from "lucide-react";
 import { auth } from "../lib/supabase";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [mode, setMode] = useState<"magic-link" | "password">("magic-link");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +21,13 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Redirect to dashboard if user is already authenticated
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +63,10 @@ export default function SignIn() {
 
       if (error) {
         setError(error.message);
+      } else {
+        // Successful sign-in, redirect to dashboard
+        navigate("/dashboard", { replace: true });
       }
-      // If successful, the AuthContext will handle the redirect
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {

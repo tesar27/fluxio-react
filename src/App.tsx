@@ -14,9 +14,9 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import AuthCallback from "./pages/AuthCallback";
 import SetupPassword from "./pages/SetupPassword";
+import Dashboard from "./pages/Dashboard";
 
 // App Pages
-import Dashboard from "./pages/Dashboard";
 
 // Landing Page Component
 function LandingPage() {
@@ -52,7 +52,7 @@ function App() {
             }
           />
           <Route
-            path="/dashboard"
+            path="/dashboard/*"
             element={
               <ProtectedRoute>
                 <Dashboard />
