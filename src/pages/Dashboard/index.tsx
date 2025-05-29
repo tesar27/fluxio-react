@@ -3,7 +3,7 @@ import Overview from "./Overview";
 import Calendar from "./Calendar";
 import Kanban from "./Kanban";
 import Projects from "./Projects";
-import DashboardLayout from "./components/DashboardLayout";
+import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 
 export default function Dashboard() {
   return (

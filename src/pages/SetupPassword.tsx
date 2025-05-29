@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff, CheckCircle, Loader2 } from "lucide-react";
 import { auth } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 
