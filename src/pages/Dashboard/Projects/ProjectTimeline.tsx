@@ -1,6 +1,6 @@
 import { useProject } from "../../../contexts/ProjectContext";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, BarChart3 } from "lucide-react";
+import { ArrowLeft, BarChart3 } from "lucide-react";
 
 export default function ProjectTimeline() {
   const { projects, selectedProject } = useProject();

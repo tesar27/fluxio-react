@@ -6,7 +6,6 @@ import {
   Users,
   Clock,
   Target,
-  Activity,
   CheckCircle,
   AlertTriangle,
   TrendingUp,

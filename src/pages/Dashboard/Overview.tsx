@@ -15,8 +15,6 @@ import {
   Target,
   Activity,
   ArrowRight,
-  ChevronDown,
-  Search,
 } from "lucide-react";
 
 export default function Overview() {

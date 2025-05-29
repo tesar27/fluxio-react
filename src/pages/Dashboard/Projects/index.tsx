@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route, useParams, Navigate } from "react-router-dom";
 import { useProject } from "../../../contexts/ProjectContext";
-import ProjectOverview from "./ProjectOverview";
 import ProjectBoard from "./ProjectBoard";
 import ProjectTimeline from "./ProjectTimeline";
 import ProjectTasks from "./ProjectTasks";
@@ -9,6 +8,7 @@ import ProjectTeam from "./ProjectTeam";
 import ProjectFiles from "./ProjectFiles";
 import ProjectSettings from "./ProjectSettings";
 import ProjectList from "./ProjectList";
+import ProjectOverview from "./ProjectOverview";
 
 export default function Projects() {
   return (

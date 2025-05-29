@@ -6,7 +6,6 @@ import {
   MoreVertical,
   Calendar,
   User,
-  Flag,
   MessageSquare,
   Paperclip,
 } from "lucide-react";
