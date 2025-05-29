@@ -1,4 +1,6 @@
 import { useAuth } from "../../contexts/AuthContext";
+import { useProject } from "../../contexts/ProjectContext";
+import { useNavigate } from "react-router-dom";
 import {
   TrendingUp,
   TrendingDown,
@@ -13,16 +15,32 @@ import {
   Target,
   Activity,
   ArrowRight,
+  ChevronDown,
+  Search,
 } from "lucide-react";
 
 export default function Overview() {
   const { user } = useAuth();
+  const { projects, selectedProject, setSelectedProject } = useProject();
+  const navigate = useNavigate();
+
+  // Calculate global metrics from projects data
+  const activeProjects = projects.filter(
+    (p) => p.status !== "Completed"
+  ).length;
+  const totalTasks = projects.reduce((sum, p) => sum + p.totalTasks, 0);
+  const completedTasks = projects.reduce((sum, p) => sum + p.tasksCompleted, 0);
+  const overdueTasks = projects.filter(
+    (p) => new Date(p.dueDate) < new Date() && p.status !== "Completed"
+  ).length;
+  const avgProductivity =
+    totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   // Enhanced global metrics
   const stats = [
     {
       name: "Active Projects",
-      value: "8",
+      value: activeProjects.toString(),
       change: "+2",
       changeType: "increase",
       period: "this month",
@@ -32,7 +50,7 @@ export default function Overview() {
     },
     {
       name: "Total Tasks",
-      value: "142",
+      value: totalTasks.toString(),
       change: "+23",
       changeType: "increase",
       period: "this week",
@@ -42,7 +60,7 @@ export default function Overview() {
     },
     {
       name: "Overdue Items",
-      value: "5",
+      value: overdueTasks.toString(),
       change: "-2",
       changeType: "decrease",
       period: "from last week",
@@ -52,7 +70,7 @@ export default function Overview() {
     },
     {
       name: "Team Productivity",
-      value: "94%",
+      value: `${avgProductivity}%`,
       change: "+5%",
       changeType: "increase",
       period: "this month",
@@ -62,55 +80,26 @@ export default function Overview() {
     },
   ];
 
-  // Project health overview
+  // Project health overview - calculated from actual projects
   const projectHealth = [
-    { status: "On Track", count: 5, color: "green" },
-    { status: "At Risk", count: 2, color: "yellow" },
-    { status: "Critical", count: 1, color: "red" },
+    {
+      status: "On Track",
+      count: projects.filter((p) => p.health === "On Track").length,
+      color: "green",
+    },
+    {
+      status: "At Risk",
+      count: projects.filter((p) => p.health === "At Risk").length,
+      color: "yellow",
+    },
+    {
+      status: "Critical",
+      count: projects.filter((p) => p.health === "Critical").length,
+      color: "red",
+    },
   ];
 
-  const recentProjects = [
-    {
-      name: "Website Redesign",
-      progress: 75,
-      dueDate: "Jan 15, 2025",
-      status: "In Progress",
-      health: "On Track",
-      team: 4,
-      tasksCompleted: 12,
-      totalTasks: 16,
-    },
-    {
-      name: "Mobile App Development",
-      progress: 30,
-      dueDate: "Feb 28, 2025",
-      status: "Planning",
-      health: "On Track",
-      team: 6,
-      tasksCompleted: 8,
-      totalTasks: 25,
-    },
-    {
-      name: "API Integration",
-      progress: 90,
-      dueDate: "Jan 10, 2025",
-      status: "Review",
-      health: "At Risk",
-      team: 3,
-      tasksCompleted: 18,
-      totalTasks: 20,
-    },
-    {
-      name: "Database Migration",
-      progress: 45,
-      dueDate: "Jan 20, 2025",
-      status: "In Progress",
-      health: "Critical",
-      team: 2,
-      tasksCompleted: 9,
-      totalTasks: 20,
-    },
-  ];
+  const recentProjects = projects;
 
   const todayActivity = [
     {
@@ -184,6 +173,61 @@ export default function Overview() {
             <Plus className="h-4 w-4" />
             <span>New Project</span>
           </button>
+        </div>
+      </div>
+
+      {/* Project Selector */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Quick Project Access
+          </h3>
+          <span className="text-sm text-gray-500">
+            {projects.length} projects total
+          </span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {projects.slice(0, 8).map((project) => (
+            <button
+              key={project.id}
+              onClick={() => navigate(`/dashboard/projects/${project.id}`)}
+              className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-sm hover:border-blue-300 transition-all text-left group"
+            >
+              <div
+                className={`w-10 h-10 rounded-lg bg-${project.color}-100 flex items-center justify-center`}
+              >
+                <FolderOpen className={`h-5 w-5 text-${project.color}-600`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-gray-900 truncate group-hover:text-blue-700">
+                  {project.name}
+                </h4>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span>{project.progress}%</span>
+                  <span
+                    className={`px-1.5 py-0.5 rounded text-xs ${
+                      project.health === "On Track"
+                        ? "bg-green-100 text-green-700"
+                        : project.health === "At Risk"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {project.health}
+                  </span>
+                </div>
+              </div>
+            </button>
+          ))}
+          {projects.length > 8 && (
+            <button
+              onClick={() => navigate("/dashboard/projects")}
+              className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600 hover:text-blue-700"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="text-sm font-medium">View All</span>
+            </button>
+          )}
         </div>
       </div>
 

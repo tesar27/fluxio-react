@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useProject } from "../../contexts/ProjectContext";
 import {
   LayoutDashboard,
   FolderOpen,
@@ -14,6 +15,11 @@ import {
   X,
   LogOut,
   User,
+  Target,
+  CheckSquare,
+  BarChart3,
+  FileText,
+  ArrowLeft,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -32,7 +38,63 @@ const navigation = [
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { selectedProject } = useProject();
   const location = useLocation();
+  const params = useParams();
+
+  // Check if we're in a project-specific route
+  const isInProject =
+    location.pathname.includes("/projects/") && params.projectId;
+
+  // Project-specific navigation
+  const projectNavigation = selectedProject
+    ? [
+        {
+          name: "← Back to Projects",
+          href: "/dashboard/projects",
+          icon: ArrowLeft,
+          isBack: true,
+        },
+        {
+          name: "Overview",
+          href: `/dashboard/projects/${selectedProject.id}/overview`,
+          icon: Target,
+        },
+        {
+          name: "Board",
+          href: `/dashboard/projects/${selectedProject.id}/board`,
+          icon: Kanban,
+        },
+        {
+          name: "Timeline",
+          href: `/dashboard/projects/${selectedProject.id}/timeline`,
+          icon: BarChart3,
+        },
+        {
+          name: "Tasks",
+          href: `/dashboard/projects/${selectedProject.id}/tasks`,
+          icon: CheckSquare,
+        },
+        {
+          name: "Team",
+          href: `/dashboard/projects/${selectedProject.id}/team`,
+          icon: Users,
+        },
+        {
+          name: "Files",
+          href: `/dashboard/projects/${selectedProject.id}/files`,
+          icon: FileText,
+        },
+        {
+          name: "Settings",
+          href: `/dashboard/projects/${selectedProject.id}/settings`,
+          icon: Settings,
+        },
+      ]
+    : [];
+
+  const currentNavigation =
+    isInProject && selectedProject ? projectNavigation : navigation;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -64,7 +126,30 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
           </div>
           <nav className="flex-1 px-4 py-4 space-y-1">
-            {navigation.map((item) => {
+            {/* Project header in sidebar when in project context */}
+            {isInProject && selectedProject && (
+              <div className="mb-4 p-3 bg-gray-50 rounded-lg border">
+                <h3 className="text-sm font-medium text-gray-900 truncate">
+                  {selectedProject.name}
+                </h3>
+                <p className="text-xs text-gray-500 truncate mt-1">
+                  {selectedProject.description}
+                </p>
+                <div className="mt-2 flex items-center space-x-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                    <div
+                      className="bg-blue-600 h-1.5 rounded-full"
+                      style={{ width: `${selectedProject.progress}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-xs text-gray-600">
+                    {selectedProject.progress}%
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {currentNavigation.map((item) => {
               const isActive =
                 location.pathname === item.href ||
                 (item.href !== "/dashboard/overview" &&
@@ -78,6 +163,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     isActive
                       ? "bg-blue-50 text-blue-700 border-r-2 border-blue-700"
                       : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  } ${
+                    (item as any).isBack
+                      ? "mb-2 border-b border-gray-200 pb-2"
+                      : ""
                   }`}
                 >
                   <item.icon
@@ -112,7 +201,30 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-4 space-y-1">
-            {navigation.map((item) => {
+            {/* Project header in sidebar when in project context */}
+            {isInProject && selectedProject && (
+              <div className="mb-4 p-3 bg-gray-50 rounded-lg border">
+                <h3 className="text-sm font-medium text-gray-900 truncate">
+                  {selectedProject.name}
+                </h3>
+                <p className="text-xs text-gray-500 truncate mt-1">
+                  {selectedProject.description}
+                </p>
+                <div className="mt-2 flex items-center space-x-2">
+                  <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                    <div
+                      className="bg-blue-600 h-1.5 rounded-full"
+                      style={{ width: `${selectedProject.progress}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-xs text-gray-600">
+                    {selectedProject.progress}%
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {currentNavigation.map((item) => {
               const isActive =
                 location.pathname === item.href ||
                 (item.href !== "/dashboard/overview" &&
@@ -125,6 +237,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     isActive
                       ? "bg-blue-50 text-blue-700 border-r-2 border-blue-700"
                       : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                  } ${
+                    (item as any).isBack
+                      ? "mb-2 border-b border-gray-200 pb-2"
+                      : ""
                   }`}
                 >
                   <item.icon

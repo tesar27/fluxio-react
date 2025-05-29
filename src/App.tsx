@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ProjectProvider } from "./contexts/ProjectContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Landing Page Components
@@ -35,34 +36,36 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/auth/signup" element={<SignUp />} />
-          <Route path="/auth/signin" element={<SignIn />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
+        <ProjectProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/auth/signup" element={<SignUp />} />
+            <Route path="/auth/signin" element={<SignIn />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
 
-          {/* Protected Routes */}
-          <Route
-            path="/auth/setup-password"
-            element={
-              <ProtectedRoute>
-                <SetupPassword />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/*"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+            {/* Protected Routes */}
+            <Route
+              path="/auth/setup-password"
+              element={
+                <ProtectedRoute>
+                  <SetupPassword />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/*"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Catch all route - redirect to landing */}
-          <Route path="*" element={<LandingPage />} />
-        </Routes>
+            {/* Catch all route - redirect to landing */}
+            <Route path="*" element={<LandingPage />} />
+          </Routes>
+        </ProjectProvider>
       </AuthProvider>
     </Router>
   );
