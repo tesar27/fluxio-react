@@ -15,7 +15,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import AuthCallback from "./pages/AuthCallback";
 import SetupPassword from "./pages/SetupPassword";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/Dashboard/index";
 
 // App Pages
 

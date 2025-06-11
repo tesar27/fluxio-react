@@ -7,8 +7,11 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Hero() {
+  const { user, loading } = useAuth();
+
   return (
     <section className="bg-gradient-to-br from-blue-50 to-indigo-100 pt-16 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,13 +37,27 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-            <Link
-              to="/auth/signup"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors flex items-center justify-center"
-            >
-              Start Free Trial
-              <ArrowRight size={20} className="ml-2" />
-            </Link>
+            {loading ? (
+              <div className="bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold opacity-50 cursor-not-allowed flex items-center justify-center">
+                Loading...
+              </div>
+            ) : user ? (
+              <Link
+                to="/dashboard"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors flex items-center justify-center"
+              >
+                Go to Dashboard
+                <ArrowRight size={20} className="ml-2" />
+              </Link>
+            ) : (
+              <Link
+                to="/auth/signup"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors flex items-center justify-center"
+              >
+                Start Free Trial
+                <ArrowRight size={20} className="ml-2" />
+              </Link>
+            )}
             <button className="border border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
               Watch Demo
             </button>

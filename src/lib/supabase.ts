@@ -80,5 +80,27 @@ export const auth = {
       redirectTo: redirectTo || `${window.location.origin}/auth/reset-password`
     })
     return { data, error }
+  },
+
+  // Sign in with Google
+  signInWithGoogle: async (redirectTo?: string) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectTo || `${window.location.origin}/auth/callback`
+      }
+    })
+    return { data, error }
+  },
+
+  // Sign in with GitHub
+  signInWithGitHub: async (redirectTo?: string) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: redirectTo || `${window.location.origin}/auth/callback`
+      }
+    })
+    return { data, error }
   }
 }
