@@ -81,14 +81,24 @@ export default function SignIn() {
 
     try {
       const { error } = await auth.signInWithGoogle();
-
+      
       if (error) {
-        setError(error.message);
+        // Provide more specific error messages
+        if (error.message.includes('email_not_confirmed')) {
+          setError('Please confirm your email address before signing in.');
+        } else if (error.message.includes('invalid_credentials')) {
+          setError('Invalid credentials. Please try again.');
+        } else {
+          setError(error.message);
+        }
+        setLoading(false);
+        return;
       }
-      // Note: OAuth redirects to callback, so no manual navigation needed
+      
+      // Success - OAuth will redirect via callback
+      // Don't set loading to false here as redirect is happening
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
+      setError("Failed to sign in with Google. Please try again.");
       setLoading(false);
     }
   };
@@ -99,14 +109,24 @@ export default function SignIn() {
 
     try {
       const { error } = await auth.signInWithGitHub();
-
+      
       if (error) {
-        setError(error.message);
+        // Provide more specific error messages
+        if (error.message.includes('email_not_confirmed')) {
+          setError('Please confirm your email address before signing in.');
+        } else if (error.message.includes('invalid_credentials')) {
+          setError('Invalid credentials. Please try again.');
+        } else {
+          setError(error.message);
+        }
+        setLoading(false);
+        return;
       }
-      // Note: OAuth redirects to callback, so no manual navigation needed
+      
+      // Success - OAuth will redirect via callback
+      // Don't set loading to false here as redirect is happening
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-    } finally {
+      setError("Failed to sign in with GitHub. Please try again.");
       setLoading(false);
     }
   };

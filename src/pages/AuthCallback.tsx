@@ -14,29 +14,51 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Get the session from the URL hash
+        // Handle the OAuth callback
         const { data, error } = await supabase.auth.getSession();
 
         if (error) {
+          console.error('Auth callback error:', error);
           setStatus("error");
           setMessage(error.message);
           return;
         }
 
         if (data.session) {
+          const { user } = data.session;
+          
           setStatus("success");
           setMessage("Successfully signed in! Redirecting...");
 
-          // Check if this is a new user (first time sign in)
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
+          // Check user's identities to determine if this is OAuth
+          const identities = user.identities || [];
+          const hasOAuthIdentity = identities.some(identity => 
+            ['google', 'github'].includes(identity.provider)
+          );
+          
+          // Check if user has multiple identities (linked accounts)
+          const hasMultipleIdentities = identities.length > 1;
+          
+          // Check if user already has a password set (existing email account)
+          const hasPassword = identities.some(identity => identity.provider === 'email');
 
-          if (user && !user.user_metadata?.password_set) {
-            // New user - redirect to password setup
+          console.log('User identities:', identities);
+          console.log('Has OAuth identity:', hasOAuthIdentity);
+          console.log('Has multiple identities:', hasMultipleIdentities);
+          console.log('Has password:', hasPassword);
+
+          // Determine where to redirect
+          if (hasOAuthIdentity && !hasPassword && !user.user_metadata?.password_set) {
+            // New OAuth user - can go directly to dashboard (no password needed)
+            setTimeout(() => navigate("/dashboard"), 2000);
+          } else if (hasOAuthIdentity && hasPassword) {
+            // OAuth user with linked email account - go to dashboard
+            setTimeout(() => navigate("/dashboard"), 2000);
+          } else if (!hasPassword && !user.user_metadata?.password_set) {
+            // Magic link user without password - redirect to setup
             setTimeout(() => navigate("/auth/setup-password"), 2000);
           } else {
-            // Existing user - redirect to dashboard
+            // Default - go to dashboard
             setTimeout(() => navigate("/dashboard"), 2000);
           }
         } else {
@@ -44,6 +66,7 @@ export default function AuthCallback() {
           setMessage("No session found. Please try signing in again.");
         }
       } catch (err) {
+        console.error('Auth callback unexpected error:', err);
         setStatus("error");
         setMessage("An unexpected error occurred. Please try again.");
       }
