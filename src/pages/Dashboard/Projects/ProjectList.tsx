@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export default function ProjectList() {
-  const { projects, createProject } = useProject();
+  const { projects, createProject: _createProject } = useProject();
   const navigate = useNavigate();
 
   const handleProjectClick = (projectId: string) => {
@@ -54,24 +54,24 @@ export default function ProjectList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
-          <p className="text-gray-600 mt-1">
+          <p className="mt-1 text-gray-600">
             Manage and track all your organization's projects
           </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute w-4 h-4 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search projects..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="py-2 pl-10 pr-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
-          <button className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors">
-            <Filter className="h-4 w-4" />
+          <button className="flex items-center gap-2 px-4 py-2 font-medium text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            <Filter className="w-4 h-4" />
             <span>Filter</span>
           </button>
           <button
@@ -79,17 +79,17 @@ export default function ProjectList() {
               // For now, just navigate to a new project (we'll implement creation later)
               console.log("Create new project");
             }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="w-4 h-4" />
             <span>New Project</span>
           </button>
         </div>
       </div>
 
       {/* Project Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -99,10 +99,10 @@ export default function ProjectList() {
                 {projects.length}
               </p>
             </div>
-            <FolderOpen className="h-8 w-8 text-blue-600" />
+            <FolderOpen className="w-8 h-8 text-blue-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Active</p>
@@ -110,10 +110,10 @@ export default function ProjectList() {
                 {projects.filter((p) => p.status === "In Progress").length}
               </p>
             </div>
-            <TrendingUp className="h-8 w-8 text-green-600" />
+            <TrendingUp className="w-8 h-8 text-green-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">At Risk</p>
@@ -125,10 +125,10 @@ export default function ProjectList() {
                 }
               </p>
             </div>
-            <Clock className="h-8 w-8 text-yellow-600" />
+            <Clock className="w-8 h-8 text-yellow-600" />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Completed</p>
@@ -136,18 +136,18 @@ export default function ProjectList() {
                 {projects.filter((p) => p.status === "Completed").length}
               </p>
             </div>
-            <TrendingDown className="h-8 w-8 text-gray-600" />
+            <TrendingDown className="w-8 h-8 text-gray-600" />
           </div>
         </div>
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <div
             key={project.id}
             onClick={() => handleProjectClick(project.id)}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group"
+            className="p-6 transition-all bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer hover:shadow-md hover:border-blue-300 group"
           >
             {/* Project Header */}
             <div className="flex items-start justify-between mb-4">
@@ -161,29 +161,29 @@ export default function ProjectList() {
                   e.stopPropagation();
                   console.log("Project options");
                 }}
-                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-100 rounded"
+                className="p-1 transition-opacity rounded opacity-0 group-hover:opacity-100 hover:bg-gray-100"
               >
-                <MoreVertical className="h-4 w-4 text-gray-400" />
+                <MoreVertical className="w-4 h-4 text-gray-400" />
               </button>
             </div>
 
             {/* Project Info */}
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
+              <h3 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-700">
                 {project.name}
               </h3>
-              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+              <p className="mt-1 text-sm text-gray-600 line-clamp-2">
                 {project.description}
               </p>
             </div>
 
             {/* Project Metrics */}
-            <div className="space-y-3 mb-4">
+            <div className="mb-4 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Progress</span>
                 <span className="font-medium">{project.progress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full h-2 bg-gray-200 rounded-full">
                 <div
                   className={`h-2 rounded-full bg-${project.color}-500 transition-all duration-300`}
                   style={{ width: `${project.progress}%` }}
@@ -191,11 +191,11 @@ export default function ProjectList() {
               </div>
               <div className="flex items-center justify-between text-sm text-gray-600">
                 <div className="flex items-center">
-                  <Calendar className="h-4 w-4 mr-1" />
+                  <Calendar className="w-4 h-4 mr-1" />
                   <span>Due {project.dueDate}</span>
                 </div>
                 <div className="flex items-center">
-                  <Users className="h-4 w-4 mr-1" />
+                  <Users className="w-4 h-4 mr-1" />
                   <span>{project.team} members</span>
                 </div>
               </div>
@@ -220,7 +220,7 @@ export default function ProjectList() {
             </div>
 
             {/* Tasks Summary */}
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="pt-3 mt-3 border-t border-gray-100">
               <div className="text-xs text-gray-500">
                 {project.tasksCompleted} of {project.totalTasks} tasks completed
               </div>
@@ -233,13 +233,13 @@ export default function ProjectList() {
           onClick={() => console.log("Create new project")}
           className="bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-300 p-6 hover:border-blue-400 hover:bg-blue-50 transition-all cursor-pointer flex flex-col items-center justify-center min-h-[280px] group"
         >
-          <div className="w-12 h-12 rounded-lg bg-gray-100 group-hover:bg-blue-100 flex items-center justify-center mb-4 transition-colors">
-            <Plus className="h-6 w-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
+          <div className="flex items-center justify-center w-12 h-12 mb-4 transition-colors bg-gray-100 rounded-lg group-hover:bg-blue-100">
+            <Plus className="w-6 h-6 text-gray-400 transition-colors group-hover:text-blue-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-600 group-hover:text-blue-700 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-600 transition-colors group-hover:text-blue-700">
             Create New Project
           </h3>
-          <p className="text-sm text-gray-500 text-center mt-2">
+          <p className="mt-2 text-sm text-center text-gray-500">
             Start a new project and bring your ideas to life
           </p>
         </div>

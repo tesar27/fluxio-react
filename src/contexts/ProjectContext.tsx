@@ -136,7 +136,7 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
     },
   ]);
 
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProject, _setSelectedProject] = useState<Project | null>(null);
 
   const createProject = (
     projectData: Omit<Project, "id" | "createdAt" | "updatedAt">
@@ -167,14 +167,14 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({
   const deleteProject = (id: string) => {
     setProjects((prev) => prev.filter((project) => project.id !== id));
     if (selectedProject?.id === id) {
-      setSelectedProject(null);
+      _setSelectedProject(null);
     }
   };
 
   const value: ProjectContextType = {
     projects,
     selectedProject,
-    setSelectedProject,
+    setSelectedProject: _setSelectedProject,
     createProject,
     updateProject,
     deleteProject,
