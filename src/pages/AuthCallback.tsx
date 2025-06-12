@@ -18,7 +18,7 @@ export default function AuthCallback() {
         const { data, error } = await supabase.auth.getSession();
 
         if (error) {
-          console.error('Auth callback error:', error);
+          console.error("Auth callback error:", error);
           setStatus("error");
           setMessage(error.message);
           return;
@@ -26,29 +26,35 @@ export default function AuthCallback() {
 
         if (data.session) {
           const { user } = data.session;
-          
+
           setStatus("success");
           setMessage("Successfully signed in! Redirecting...");
 
           // Check user's identities to determine if this is OAuth
           const identities = user.identities || [];
-          const hasOAuthIdentity = identities.some(identity => 
-            ['google', 'github'].includes(identity.provider)
+          const hasOAuthIdentity = identities.some((identity) =>
+            ["google", "github"].includes(identity.provider)
           );
-          
+
           // Check if user has multiple identities (linked accounts)
           const hasMultipleIdentities = identities.length > 1;
-          
-          // Check if user already has a password set (existing email account)
-          const hasPassword = identities.some(identity => identity.provider === 'email');
 
-          console.log('User identities:', identities);
-          console.log('Has OAuth identity:', hasOAuthIdentity);
-          console.log('Has multiple identities:', hasMultipleIdentities);
-          console.log('Has password:', hasPassword);
+          // Check if user already has a password set (existing email account)
+          const hasPassword = identities.some(
+            (identity) => identity.provider === "email"
+          );
+
+          console.log("User identities:", identities);
+          console.log("Has OAuth identity:", hasOAuthIdentity);
+          console.log("Has multiple identities:", hasMultipleIdentities);
+          console.log("Has password:", hasPassword);
 
           // Determine where to redirect
-          if (hasOAuthIdentity && !hasPassword && !user.user_metadata?.password_set) {
+          if (
+            hasOAuthIdentity &&
+            !hasPassword &&
+            !user.user_metadata?.password_set
+          ) {
             // New OAuth user - can go directly to dashboard (no password needed)
             setTimeout(() => navigate("/dashboard"), 2000);
           } else if (hasOAuthIdentity && hasPassword) {
@@ -66,7 +72,7 @@ export default function AuthCallback() {
           setMessage("No session found. Please try signing in again.");
         }
       } catch (err) {
-        console.error('Auth callback unexpected error:', err);
+        console.error("Auth callback unexpected error:", err);
         setStatus("error");
         setMessage("An unexpected error occurred. Please try again.");
       }
