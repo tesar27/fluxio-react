@@ -19,7 +19,11 @@ import {
 
 export default function Overview() {
   const { user } = useAuth();
-  const { projects, selectedProject: _selectedProject, setSelectedProject: _setSelectedProject } = useProject();
+  const {
+    projects,
+    selectedProject: _selectedProject,
+    setSelectedProject: _setSelectedProject,
+  } = useProject();
   const navigate = useNavigate();
 
   // Calculate global metrics from projects data
